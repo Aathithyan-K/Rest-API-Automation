@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "815347e5-d8e6-479a-8556-1f16a8819b19",
+		"name": "Service-Now-Incidents-Challenges",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17250570",
+		"_collection_link": "https://www.postman.com/red-space-276750/workspace/rest-api-automation/collection/17250570-815347e5-d8e6-479a-8556-1f16a8819b19?action=share&source=collection_link&creator=17250570"
+	},
+	"item": [
+		{
+			"name": "Incidents-RequestDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}?sysparm_limit=1",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}"
+					],
+					"query": [
+						{
+							"key": "sysparm_limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Incidents-CreateShortDescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"Resp = pm.response.json();\r",
+							"console.log(Resp);\r",
+							"pm.globals.set(\"IncidentId\",Resp.result.sys_id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"short_description\": \"Sample short description.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Incidents-ID-GetShortDescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}/{{IncidentId}}?sysparm_fields=short_description,sys_id",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}",
+						"{{IncidentId}}"
+					],
+					"query": [
+						{
+							"key": "sysparm_fields",
+							"value": "short_description,sys_id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Incidents-ID-UpdateShortDescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"short_description\": \"Updated Short Description\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}/{{IncidentId}}",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}",
+						"{{IncidentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Incidents-ID-PartialUpdateShortDescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"short_description\": \"Partial Updated Short Description.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}/{{IncidentId}}",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}",
+						"{{IncidentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Incidents-ID-DeleteRecord",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{Host}}/{{Resource_Incident}}/{{Table_Incident}}/{{IncidentId}}",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"{{Resource_Incident}}",
+						"{{Table_Incident}}",
+						"{{IncidentId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "J$cm2cjNK@9A",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
