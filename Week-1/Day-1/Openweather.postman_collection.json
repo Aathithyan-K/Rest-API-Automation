@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "b7f419ab-9a30-491e-a158-44868e0fcb8d",
+		"name": "Openweather",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17250570",
+		"_collection_link": "https://www.postman.com/red-space-276750/workspace/rest-api-automation/collection/17250570-b7f419ab-9a30-491e-a158-44868e0fcb8d?action=share&source=collection_link&creator=17250570"
+	},
+	"item": [
+		{
+			"name": "Add-RestAPI-Latitude-Longtitude",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "query",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "appid",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "a754ee10d05c5c37be3dd55317eb060d",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/xml;charset=utf-8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?lat=38.8951&lon=-77.0364",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "38.8951"
+						},
+						{
+							"key": "lon",
+							"value": "-77.0364"
+						},
+						{
+							"key": "appid",
+							"value": "a754ee10d05c5c37be3dd55317eb060d",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
