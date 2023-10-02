@@ -52,16 +52,12 @@ public class IssueManagement {
 	    resp.prettyPrint();
 	}
 	
-	@When("Update the request")
-	public void update_the_request() {
+	@When("Update the request (.*)$")
+	public void update_the_request(String reqBody) {
 		System.out.println("Jira Issue ID: " + sysId);
 		req.given()
 		.contentType("application/json")
-		.body("{\r\n"
-				+ "  \"fields\": {\r\n"
-				+ "    \"description\": \"Bug creation Using REST API for testing and aathithyan Edited\"\r\n"
-				+ "  }\r\n"
-				+ "}");
+		.body(reqBody);
 		resp = req.put(sysId);
 	    resp.prettyPrint();
 	}
