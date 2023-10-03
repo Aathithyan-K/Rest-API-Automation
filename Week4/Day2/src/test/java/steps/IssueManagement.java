@@ -110,6 +110,19 @@ public class IssueManagement {
 	    System.out.println("End of the Update Request");
 	}
 	
+	@When("Delete Issue")
+	public void delete_issue() {
+		System.out.println("Start of the Delete Request");
+		
+		System.out.println("Jira Issue ID: " + sysId);
+	    resp = req.delete("/"+sysId);
+	    resp.prettyPrint();
+	    
+	    System.out.println("Get Request Status Code: " + resp.getStatusCode());
+	    
+	    System.out.println("End of the Delete Request");
+	}
+	
 	@When("Retrieve All the requests")
 	public void retrieve_all_the_requests() {
 	    
