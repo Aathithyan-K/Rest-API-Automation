@@ -23,6 +23,11 @@ Examples:
 |Update_Json|
 |UpdateIssue.json|
 
+Scenario: Delete Issue in Jira
+
+When Delete Issue
+Then Validate Status Code 204
+
 Scenario: Get All Issue in Jira
 
 Given Jira Set the endpoint
