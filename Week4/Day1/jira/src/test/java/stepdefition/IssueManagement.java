@@ -1,5 +1,9 @@
 package stepdefition;
 
+import java.io.File;
+
+import org.hamcrest.Matchers;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -23,6 +27,7 @@ public class IssueManagement {
 	}
 	@When("Create Issue")
 	public void create_issue() {
+		System.out.println("Start of the Create Request");
 		req = RestAssured.given()
 				.contentType("application/json")
 				.body("{\r\n"
@@ -42,32 +47,67 @@ public class IssueManagement {
 		sysId = resp.jsonPath().get("id");
 		System.out.println("Jira Issue ID: " + sysId);
 		
+		System.out.println("Create Request Status Code: " + resp.getStatusCode());
+		
 		resp.prettyPrint();
+		System.out.println("End of the Create Request");
 	}
 	
 	@When("Retrieve the request")
 	public void retrieve_the_request() {
+		System.out.println("Start of the Get Request");
+		
 		System.out.println("Jira Issue ID: " + sysId);
-	    resp = req.get(sysId);
+	    resp = req.get("/"+sysId);
 	    resp.prettyPrint();
+	    
+	    System.out.println("Get Request Status Code: " + resp.getStatusCode());
+	    
+	    System.out.println("End of the Get Request");
 	}
 	
 	@When("Update the request (.*)$")
 	public void update_the_request(String reqBody) {
+		File file = new File("./src/test/resources/"+reqBody);
+		
+		System.out.println("Start of the Update Request");
+		
+		System.out.println("Request Body: " + file);
 		System.out.println("Jira Issue ID: " + sysId);
 		req.given()
 		.contentType("application/json")
-		.body(reqBody);
+		.body(file);
 		resp = req.put(sysId);
-	    resp.prettyPrint();
+	    
+	    System.out.println("Update Request Status Code: " + resp.getStatusCode());
+	    
+	    String contentType = resp.contentType();
+	    System.out.println("Content Type: " + contentType);
+	    
+	    resp.then().assertThat().contentType("application/json");
+	    String[] list = contentType.split(";");
+	    if(list[0].equals("application/json")) {
+	    	System.out.println("Content Type Matched");
+	    }
+	    else {
+	    	System.out.println("Content Type Mismatched");
+	    }
+	    
+	    System.out.println("End of the Update Request");
 	}
 	
 	@Then("Validate Status Code {int}")
 	public void validate_status_code(Integer status) {
+		
+		System.out.println("Start of the Status Validation");
+		
 		int statusCode = resp.statusCode();
 		System.out.println("Status Code: " + statusCode);
 		if(status==statusCode) {
 			System.out.println("Issue Created Successfully!");
 		}
+		resp.then().assertThat().statusCode(Matchers.equalTo(status));
+		
+		System.out.println("End of the Status Validation");
 	}
 }
