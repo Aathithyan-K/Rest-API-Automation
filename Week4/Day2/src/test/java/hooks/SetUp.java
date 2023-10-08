@@ -20,7 +20,7 @@ public class SetUp {
 		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
 		
 		RestAssured.baseURI = "https://"+prop.getProperty("server")+"/"+prop.getProperty("resources")+"/";
-		RestAssured.authentication = RestAssured.basic(prop.getProperty("username"), prop.getProperty("apikey"));
+		RestAssured.authentication = RestAssured.preemptive().basic(prop.getProperty("username"), prop.getProperty("apikey"));
 		//RestAssured.authentication=RestAssured.oauth2(prop.getProperty("oAuth2"));
 	}
 	

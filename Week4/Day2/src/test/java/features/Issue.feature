@@ -1,8 +1,8 @@
 Feature: Jira Issue Management
 
-Background:
-Given Set the endpoint
-Given User Authentication
+#Background:
+#Given Set the endpoint
+#Given User Authentication
 
 Scenario: Create Issue in Jira
 
@@ -30,7 +30,6 @@ Then Validate Status Code 204
 
 Scenario: Get All Issue in Jira
 
-Given Jira Set the endpoint
 When Retrieve All the requests
 Then Validate Status Code 200
 

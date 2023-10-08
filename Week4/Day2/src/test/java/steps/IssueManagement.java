@@ -21,17 +21,24 @@ public class IssueManagement {
 	public static Response resp;
 	public static String sysId;
 	
-	@Given("Set the endpoint")
-	public void set_the_endpoint() {
-		RestAssured.baseURI = "https://aathithyan-kaliyamoorthy.atlassian.net/rest/api/2/issue/";
-	}
-	@Given("User Authentication")
-	public void user_authentication() {
-		RestAssured.authentication = RestAssured.preemptive().basic("aathithyankaliyamoorthy@gmail.com", "ATATT3xFfGF06PD_zYSrVmUappgX2yhldhagXwYwS5bvCDs9nrLAwuzswDwBGiqa3dfYe3ic5a5BInXTmiA7zwTLXIYW5_0I6waiHyKPDGIKzwPEjoVcaeLFoaYt5E8l-1JS6Xeff0Cglir2r87MZ9y7_ZLH56luyEIZADX8u_tzAMto117yn4M=03956C33");
-	}
+	
+//	@Given("Set the endpoint")
+//	public void set_the_endpoint() {
+//		RestAssured.baseURI = "https://aathithyan-kaliyamoorthy.atlassian.net/rest/api/2/issue/";
+//	}
+//	@Given("User Authentication")
+//	public void user_authentication() {
+//		RestAssured.authentication = RestAssured.preemptive().basic("aathithyankaliyamoorthy@gmail.com", "ATATT3xFfGF06PD_zYSrVmUappgX2yhldhagXwYwS5bvCDs9nrLAwuzswDwBGiqa3dfYe3ic5a5BInXTmiA7zwTLXIYW5_0I6waiHyKPDGIKzwPEjoVcaeLFoaYt5E8l-1JS6Xeff0Cglir2r87MZ9y7_ZLH56luyEIZADX8u_tzAMto117yn4M=03956C33");
+//	}
+	
 	@When("Create Issue")
-	public void create_issue() {
-		System.out.println("Start of the Create Request");
+	public void create_issue() throws FileNotFoundException, IOException {
+		
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
+		
+		System.out.println("https://"+prop.getProperty("server")+"/"+prop.getProperty("resources")+"/"+prop.getProperty("issue"));
+		System.out.println("Base URI: " + RestAssured.baseURI);
 		req = RestAssured.given()
 				.contentType("application/json")
 				.body("{\r\n"
@@ -46,33 +53,59 @@ public class IssueManagement {
 						+ "    }\r\n"
 						+ "  }\r\n"
 						+ "}");
-		resp = req.post();
+		resp = req.post("/" + prop.getProperty("issue"));
 		
 		sysId = resp.jsonPath().get("id");
 		System.out.println("Jira Issue ID: " + sysId);
 		
 		System.out.println("Create Request Status Code: " + resp.getStatusCode());
 		
-		resp.prettyPrint();
+//		resp.prettyPrint();
 		System.out.println("End of the Create Request");
 	}
 	
 	@Given("Jira Set the endpoint")
 	public void jira_set_the_endpoint() throws FileNotFoundException, IOException {
 		System.out.println("Start of the Set End point for Get All Request");
+		
 		Properties prop = new Properties();
 		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
+		
 		System.out.println("URL: " + "https://"+prop.getProperty("server")+"/"+prop.getProperty("resources")+prop.getProperty("search")+"/");
-		RestAssured.baseURI = "https://"+prop.getProperty("server")+"/"+prop.getProperty("resources")+prop.getProperty("search")+"/";
+		
+		RestAssured.baseURI = "https://"+prop.getProperty("server")+"/"+prop.getProperty("resources")+"/"+prop.getProperty("search")+"/";
+		
 		System.out.println("End of the Set End point for Get All Request");
 	}
 	
+	@When("Retrieve All the requests")
+	public void retrieve_all_the_requests() throws FileNotFoundException, IOException {
+	    
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
+
+		System.out.println("Start of the Get All Request");
+		
+		req = RestAssured.given()
+				.queryParam("jql", "project=RestAPIAutomation");
+	    resp = req.get("/"+prop.getProperty("search"));
+//	    resp.prettyPrint();
+	    
+	    System.out.println("Get All Request Status Code: " + resp.getStatusCode());
+	    
+	    System.out.println("End of the Get All Request");
+	    
+	}
+	
 	@When("Retrieve the request")
-	public void retrieve_the_request() {
+	public void retrieve_the_request() throws FileNotFoundException, IOException {
 		System.out.println("Start of the Get Request");
 		
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
+		
 		System.out.println("Jira Issue ID: " + sysId);
-	    resp = req.get("/"+sysId);
+	    resp = req.get(prop.getProperty("issue")+"/"+sysId);
 	    resp.prettyPrint();
 	    
 	    System.out.println("Get Request Status Code: " + resp.getStatusCode());
@@ -81,9 +114,10 @@ public class IssueManagement {
 	}
 	
 	@When("Update the request (.*)$")
-	public void update_the_request(String reqBody) {
+	public void update_the_request(String reqBody) throws FileNotFoundException, IOException {
 		File file = new File("./src/test/resources/"+reqBody);
-		
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
 		System.out.println("Start of the Update Request");
 		
 		System.out.println("Request Body: " + file);
@@ -91,7 +125,7 @@ public class IssueManagement {
 		req.given()
 		.contentType("application/json")
 		.body(file);
-		resp = req.put(sysId);
+		resp = req.put(prop.getProperty("issue")+"/"+sysId);
 	    
 	    System.out.println("Update Request Status Code: " + resp.getStatusCode());
 	    
@@ -111,33 +145,21 @@ public class IssueManagement {
 	}
 	
 	@When("Delete Issue")
-	public void delete_issue() {
+	public void delete_issue() throws FileNotFoundException, IOException {
 		System.out.println("Start of the Delete Request");
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(new File("./src/test/resources/config.properties")));
+
 		
 		System.out.println("Jira Issue ID: " + sysId);
-	    resp = req.delete("/"+sysId);
-	    resp.prettyPrint();
+	    resp = req.delete(prop.getProperty("issue")+"/"+sysId);
+//	    resp.prettyPrint();
 	    
 	    System.out.println("Get Request Status Code: " + resp.getStatusCode());
 	    
 	    System.out.println("End of the Delete Request");
 	}
 	
-	@When("Retrieve All the requests")
-	public void retrieve_all_the_requests() {
-	    
-		System.out.println("Start of the Get All Request");
-		
-		req = RestAssured.given()
-				.queryParam("jql", "project='RestAPIAutomation'");
-	    resp = req.get();
-//	    resp.prettyPrint();
-	    
-	    System.out.println("Get All Request Status Code: " + resp.getStatusCode());
-	    
-	    System.out.println("End of the Get All Request");
-	    
-	}
 	
 	@Then("Validate Status Code {int}")
 	public void validate_status_code(Integer status) {
