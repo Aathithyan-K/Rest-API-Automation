@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "c095ef51-146f-4ea2-ad6a-0f90ebcd7bea",
+		"name": "Bookr_APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "17250570",
+		"_collection_link": "https://www.postman.com/red-space-276750/workspace/rest-api-automation/collection/17250570-c095ef51-146f-4ea2-ad6a-0f90ebcd7bea?action=share&source=collection_link&creator=17250570"
+	},
+	"item": [
+		{
+			"name": "Bookr_Auth_Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json();\r",
+							"var auth = resp.token;\r",
+							"pm.globals.set(\"authToken\",auth);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}"
+				},
+				"url": "https://restful-booker.herokuapp.com/auth"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json();\r",
+							"pm.globals.set(\"bookingId\",resp.bookingid);\r",
+							"\r",
+							"pm.test(\"Booking Created Successfully!\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : 111,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-01-01\",\r\n        \"checkout\" : \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}"
+				},
+				"url": "https://restful-booker.herokuapp.com/booking"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Booking Updated Successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "password123",
+						"username": "admin"
+					}
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token=abc123",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : 111,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-01-01\",\r\n        \"checkout\" : \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}"
+				},
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "AllBookings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"All booking id's displayed successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": "https://restful-booker.herokuapp.com/booking"
+			},
+			"response": []
+		},
+		{
+			"name": "SingleBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Booking fetched successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePartialBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Booking partially updated\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "password123",
+						"username": "admin"
+					}
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token=abc123"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\"\r\n}"
+				},
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Booking deleted successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "password123",
+						"username": "admin"
+					}
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token=abc123"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		}
+	]
+}
